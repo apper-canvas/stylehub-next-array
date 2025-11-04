@@ -22,17 +22,13 @@ const CategoryPage = () => {
   const { addToCart } = useCart();
   const { toggleWishlist, wishlistItems } = useWishlist();
 
-  const loadProducts = async () => {
+const loadProducts = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await productService.getAll();
-      // Filter products by category
-      const categoryProducts = data.filter(product => 
-        product.category.toLowerCase() === category.toLowerCase()
-      );
-      setProducts(categoryProducts);
-      setFilteredProducts(categoryProducts);
+      const data = await productService.getByCategory(category);
+      setProducts(data);
+      setFilteredProducts(data);
     } catch (err) {
       setError(err.message || "Failed to load products");
     } finally {
