@@ -22,15 +22,17 @@ const ProductsPage = () => {
   const { addToCart } = useCart();
   const { toggleWishlist, wishlistItems } = useWishlist();
 
-  const loadProducts = async () => {
+const loadProducts = async () => {
     try {
       setLoading(true);
       setError(null);
       const data = await productService.getAll();
-      setProducts(data);
-      setFilteredProducts(data);
+      setProducts(data || []);
+      setFilteredProducts(data || []);
     } catch (err) {
       setError(err.message || "Failed to load products");
+      setProducts([]);
+      setFilteredProducts([]);
     } finally {
       setLoading(false);
     }
