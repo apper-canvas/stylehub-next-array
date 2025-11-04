@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import SearchBar from "@/components/molecules/SearchBar";
 import ApperIcon from "@/components/ApperIcon";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useAuth } from "@/layouts/Root";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
-
+  const { user, isAuthenticated } = useSelector(state => state.user);
+  const { logout } = useAuth();
   const categories = [
     { name: "Men", path: "/category/men" },
     { name: "Women", path: "/category/women" },
@@ -59,11 +62,33 @@ const Header = () => {
           </div>
 
           {/* Right Actions */}
-          <div className="flex items-center space-x-4">
+<div className="flex items-center space-x-4">
             {/* Search Icon - Mobile */}
             <button className="md:hidden text-secondary hover:text-primary">
               <ApperIcon name="Search" size={24} />
             </button>
+
+            {/* Auth Section */}
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                <span className="hidden md:block text-sm text-secondary">
+                  Hello, {user?.firstName || user?.name || 'User'}
+                </span>
+                <button
+                  onClick={logout}
+                  className="text-secondary hover:text-primary transition-colors text-sm font-medium"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="text-secondary hover:text-primary transition-colors text-sm font-medium"
+              >
+                Login
+              </Link>
+            )}
 
             {/* Wishlist */}
             <Link
